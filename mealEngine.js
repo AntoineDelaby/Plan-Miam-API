@@ -22,15 +22,16 @@ function closeConnection(database) {
         });
 }
 
-export function getMeals() {
-    let db = getConnection();
-    db.all(SELECT_ALL_MEALS, [], (err, rows) => {
-        if (err) {
-            throw err;
-        }
-        rows.forEach((row) => {
-            console.log(row);
+export async function getMeals() {
+    return new Promise((resolve, reject) => {
+        const db = getConnection();
+
+        db.all(SELECT_ALL_MEALS, [], (err, rows) => {
+            if (err) {
+                closeConnection(db);
+                reject(err);
+            }
+            resolve(rows);
         });
-        });
-    closeConnection(db);
+    })
 }

@@ -5,14 +5,16 @@ import cors from "cors";
 import _ from "lodash";
 
 const app = express();
+app.use(cors());
 
 app.get("/testWorking", (req, res) => {
     res.send("It is working !");
 });
 
-app.get("/meals", (req, res) => {
-    getMeals();
-    res.send("Look at console");
+app.get("/meals", async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    let result = await getMeals();
+    res.end(JSON.stringify(result));
 });
 
 const port = 8888;
