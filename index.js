@@ -1,4 +1,5 @@
 import {getMeals} from "./mealEngine.js"
+import {getIngredients} from "./ingredientEngine.js"
 import fs from "fs/promises";
 import express from "express";
 import cors from "cors";
@@ -14,6 +15,12 @@ app.get("/testWorking", (req, res) => {
 app.get("/meals", async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     let result = await getMeals();
+    res.end(JSON.stringify(result));
+});
+
+app.get("/ingredients", async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    let result = await getIngredients();
     res.end(JSON.stringify(result));
 });
 

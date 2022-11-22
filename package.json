@@ -8,6 +8,7 @@
     "start": "node index.js"
   },
   "type": "module",
+  "proxy": "http://localhost:8888",
   "keywords": [],
   "author": "",
   "license": "ISC",
