@@ -38,6 +38,20 @@ export async function getIngredients() {
     })
 }
 
+export async function getIngredientWithName(mealIngredient) {
+    return new Promise((resolve, reject) => {
+        const db = getConnection();
+
+        db.all(SELECT_ONE_INGREDIENT, [mealIngredient], (err, rows) => {
+            if (err) {
+                closeConnection(db);
+                reject(err);
+            }
+            resolve(rows);
+        });
+    })
+}
+
 async function existingIngredient(ingredientName) {
     return new Promise((resolve, reject) => {
         const db = getConnection();

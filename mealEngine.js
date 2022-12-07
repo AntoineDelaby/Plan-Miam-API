@@ -1,7 +1,9 @@
 import sqlite3 from 'sqlite3';
 
 let databasePath = 'planMiamDb.db';
-let SELECT_ALL_MEALS = 'SELECT * FROM PLATE'
+let SELECT_ALL_MEALS = 'SELECT * FROM PLATE';
+let SELECT_ONE_MEAL = "SELECT * FROM PLATE WHERE PLATE_NAME = ?";
+let INSERT_MEAL = "INSERT INTO PlATE(PLATE_NAME, COOK_TIME, RECIPE) values (?, ?, ?)";
 
 function getConnection() {
     let database = new sqlite3.Database(databasePath, (err) => {
@@ -34,4 +36,59 @@ export async function getMeals() {
             resolve(rows);
         });
     })
+}
+
+export async function getMealWithName(mealName) {
+    return new Promise((resolve, reject) => {
+        const db = getConnection();
+
+        db.all(SELECT_ONE_MEAL, [mealName], (err, rows) => {
+            if (err) {
+                closeConnection(db);
+                reject(err);
+            }
+            resolve(rows);
+        });
+    })
+}
+
+async function existingMeal(mealName) {
+    return new Promise((resolve, reject) => {
+        const db = getConnection();
+
+        db.all(SELECT_ONE_MEAL, [mealName], (err, rows) => {
+            if (err) {
+                closeConnection(db);
+                reject(err);
+            }
+            resolve(rows.length != 0);
+        });
+    })
+}
+
+export async function addMeal(newMeal) {
+    return new Promise((resolve, reject) => {
+        const db = getConnection();
+        db.all(INSERT_MEAL, [newMeal.name, newMeal.cookTime, newMeal.recipe], (err, rows) => {
+            if (err) {
+            closeConnection(db);
+            reject(err);
+            }
+            resolve(true);
+        });
+    });
+    if(await existingMeal(newMeal.name)) {
+        return false;
+    }else {
+        return new Promise((resolve, reject) => {
+            const db = getConnection();
+            db.all(INSERT_MEAL, [newMeal.name, newMeal.cookTime, newMeal.recipe], (err, rows) => {
+                if (err) {
+                closeConnection(db);
+                reject(err);
+                }
+                resolve(true);
+            });
+        });
+    }
 }
