@@ -77,18 +77,4 @@ export async function addMeal(newMeal) {
             resolve(true);
         });
     });
-    if(await existingMeal(newMeal.name)) {
-        return false;
-    }else {
-        return new Promise((resolve, reject) => {
-            const db = getConnection();
-            db.all(INSERT_MEAL, [newMeal.name, newMeal.cookTime, newMeal.recipe], (err, rows) => {
-                if (err) {
-                closeConnection(db);
-                reject(err);
-                }
-                resolve(true);
-            });
-        });
-    }
 }

@@ -39,14 +39,6 @@ app.post("/meal", async (req, res) => {
             });
         }
     });
-    /*if(await addMeal(req.body.newMeal)){
-        let newMeal = await getMealWithName(req.body.newMeal.name);
-        console.log(newMeal);
-        req.body.newMeal.ingredients.forEach(element => {
-            let addNewMI = addMealIngredient(newMeal['PLATE_ID'], element);
-            if( !addNewMI) result = false;
-        });
-    }*/
     res.end(JSON.stringify({"result": result}));
 });
 

@@ -41,20 +41,14 @@ async function existingMealIngredient(mealName, ingredientName) {
 }
 
 export async function addMealIngredient(mealId, newMealIngredient) {
-    console.log(mealId);
-    console.log(newMealIngredient);
 
     let ingredient = await getIngredientWithName(newMealIngredient.ingredient);
     let result = await existingMealIngredient(mealId, ingredient[0]['INGREDIENT_ID']);
-    console.log(ingredient);
-    console.log(result);
 
     if((result.length != 0)) {
-        console.log("DE INGLEDIENT ALLEADY EXISTS");
         return false;
     }else {
         return new Promise((resolve, reject) => {
-            console.log("TRYING TO INSERT MEAL INGREDIENT")
             const db = getConnection();
             db.all(INSERT_MI, [mealId, ingredient[0]['INGREDIENT_ID'], newMealIngredient.quantity, newMealIngredient.unit, null], (err, rows) => {
                 if (err) {
