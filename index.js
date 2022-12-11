@@ -1,11 +1,11 @@
 import {addMeal, getMeals, getMealWithName} from "./mealEngine.js";
-import {getIngredients, addIngredient} from "./ingredientEngine.js";
+import {getIngredients, addIngredient, getIngredientWithId} from "./ingredientEngine.js";
 import {getUnits} from "./unitEngine.js";
 import express from "express";
 import cors from "cors";
 import _ from "lodash";
 import bodyParser from "body-parser";
-import { addMealIngredient } from "./mealIngredientEngine.js";
+import { addMealIngredient, getMealIngredientsWithId } from "./mealIngredientEngine.js";
 
 const app = express();
 app.use(cors());
@@ -63,6 +63,13 @@ app.get("/meal/:mealName", async (req, res) => {
     res.end(JSON.stringify({"result":result}));
 });
 
+app.get("/ingredient/:ingredientId", async (req, res) => {
+    console.log("Demande pour GET ingredient ingredientId");
+    res.setHeader('Content-Type', 'application/json');
+    let result = await getIngredientWithId(req.params.ingredientId);
+    res.end(JSON.stringify(result));
+});
+
 app.post("/ingredients/:ingredientName", async (req, res) => {
     console.log("Demande pour POST ingredients");
     res.setHeader('Content-Type', 'application/json');
@@ -74,6 +81,13 @@ app.get("/units", async (req, res) => {
     console.log("Demande pour GET units");
     res.setHeader('Content-Type', 'application/json');
     let result = await getUnits();
+    res.end(JSON.stringify(result));
+});
+
+app.get("/mealIngredients/:mealId", async (req, res) => {
+    console.log("Demande pour GET mealIngredients mealId");
+    res.setHeader('Content-Type', 'application/json');
+    let result = await getMealIngredientsWithId(req.params.mealId);
     res.end(JSON.stringify(result));
 });
 

@@ -3,6 +3,7 @@ import sqlite3 from 'sqlite3';
 let databasePath = 'planMiamDb.db';
 let SELECT_ALL_INGREDIENTS = 'SELECT * FROM INGREDIENT';
 let SELECT_ONE_INGREDIENT = 'SELECT * FROM INGREDIENT WHERE INGREDIENT_NAME = ?';
+let GET_INGREDIENT_WITH_ID = 'SELECT * FROM INGREDIENT WHERE INGREDIENT_ID = ?';
 let INSERT_INGREDIENT = 'INSERT INTO INGREDIENT(INGREDIENT_NAME) VALUES(?)';
 
 function getConnection() {
@@ -43,6 +44,20 @@ export async function getIngredientWithName(mealIngredient) {
         const db = getConnection();
 
         db.all(SELECT_ONE_INGREDIENT, [mealIngredient], (err, rows) => {
+            if (err) {
+                closeConnection(db);
+                reject(err);
+            }
+            resolve(rows);
+        });
+    })
+}
+
+export async function getIngredientWithId(ingredientId) {
+    return new Promise((resolve, reject) => {
+        const db = getConnection();
+
+        db.all(GET_INGREDIENT_WITH_ID, [ingredientId], (err, rows) => {
             if (err) {
                 closeConnection(db);
                 reject(err);

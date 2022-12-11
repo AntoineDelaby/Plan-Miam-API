@@ -6,6 +6,7 @@ let databasePath = 'planMiamDb.db';
 //MI veut dire Meal Ingredient (ou ingrédient du plat)
 let DOES_MI_EXIST = 'SELECT * FROM PLATE_INGREDIENT WHERE PLATE_ID = (SELECT PLATE_ID FROM PLATE WHERE PLATE_NAME = ?) AND INGREDIENT_ID = (SELECT INGREDIENT_ID FROM INGREDIENT WHERE INGREDIENT_NAME = ?)';
 let INSERT_MI = 'INSERT INTO PLATE_INGREDIENT VALUES (?, ?, ?, ?, ?)';
+let GET_MI_WITH_ID = 'SELECT INGREDIENT_NAME FROM INGREDIENT AS I INNER JOIN (SELECT * FROM PLATE_INGREDIENT WHERE PLATE_ID = ?) AS PI ON I.INGREDIENT_ID = PI.INGREDIENT_ID';
 
 function getConnection() {
     let database = new sqlite3.Database(databasePath, (err) => {
@@ -59,4 +60,18 @@ export async function addMealIngredient(mealId, newMealIngredient) {
             });
         });
     }
+}
+
+export async function getMealIngredientsWithId(mealId){
+    return new Promise((resolve, reject) => {
+        const db = getConnection();
+
+        db.all(GET_MI_WITH_ID, [mealId], (err, rows) => {
+            if (err) {
+                closeConnection(db);
+                reject(err);
+            }
+            resolve(rows);
+        });
+    })
 }
